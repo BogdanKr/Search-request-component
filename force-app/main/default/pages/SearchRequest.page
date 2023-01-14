@@ -1,0 +1,81 @@
+<!--
+ - Created by Bogdan_Krasun on 14.01.2023.
+ -->
+
+<apex:page id="SearchRequest" controller="SearchRequestController">
+    <style>
+        .bottomPlace {
+            position: absolute;
+            bottom: 0;
+        }
+    </style>
+    <apex:variable var="rowcount" value="{!1}"/>
+    <apex:sectionHeader title="New Requests" subtitle="Add Request"/>
+    <apex:pageMessages id="pageMessages"/>
+    <apex:form id="formId">
+        <apex:actionRegion id="regionId">
+
+            <apex:pageBlock title="Requests" id="blockId">
+                <apex:pageBlockTable value="{!requestsToHandle}" var="r" id="requestItemTable">
+                    <apex:column>
+                        {!rowcount}
+                        <apex:variable var="rowcount" value="{!rowcount+1}"/>
+                    </apex:column>
+                    <apex:column headerValue="{!$ObjectType.Search_request__c.fields.Name.Label}" id="nameColumnId">
+                        <apex:inputText id="searchInp" value="{!r.searchRequest.Name}" required="{!IF(requestsToHandle.size>1,false,true)}"
+                                        onKeyPress="handleKeyPress(event)"
+                                        disabled="{!IF(r.searchRequest.Name=='',false,true)}"/>
+                    </apex:column>
+                    <apex:column headerValue="{!$ObjectType.Search_request__c.fields.Hash__c.Label}">
+                        <apex:outputText value="{!r.searchRequest.Hash__c}"/>
+                    </apex:column>
+                    <apex:column headerValue="{!$ObjectType.Search_request__c.fields.Numeric_value__c.Label}">
+                        <apex:outputText value="{!r.searchRequest.Numeric_value__c}"/>
+                    </apex:column>
+
+                    <apex:column headerValue="Fibonacci below">
+                        <apex:outputText value="{!r.fibonacciBelow}"/>
+                    </apex:column>
+                    <apex:column headerValue="Fibonacci above">
+                        <apex:outputText value="{!r.fibonacciAbove}"/>
+                    </apex:column>
+
+                </apex:pageBlockTable>
+
+
+            </apex:pageBlock>
+        </apex:actionRegion>
+
+        <apex:actionFunction action="{!handleEnter}" name="searchFunction"/>
+        <apex:commandButton action="{!submitRequests}" value="Submit"
+                            reRender="pageMessages,requestItemTable" styleClass="bottomPlace"
+                            disabled="{!IF(requestsToHandle.size>1,false,true)}"/>
+    </apex:form>
+
+    <script>
+        function handleKeyPress(e) {
+            console.log('key pressed');
+            if (e.keyCode === 13) {
+                console.log('enter pressed');
+                e.preventDefault();
+                // if (e.preventDefault) {
+                //     e.preventDefault();
+                // } else {
+                //     e.returnValue = false;
+                // }
+                searchFunction();
+                // validate();
+            }
+        }
+        // function validate(){
+        //     console.log('input value - ' + document.getElementById('{!$Component.SearchRequest.formId.regionId.blockId.requestItemTable.nameColumnId.searchInp}'));
+        //     let inp = document.getElementById('{!$Component.searchInp}').value;
+        //     if(inp.length < 3){
+        //         alert('Please enter at least 3 characters to search.');
+        //         return false;
+        //     }
+        //     searchFunction();
+        //     return true;
+        // }
+    </script>
+</apex:page>
