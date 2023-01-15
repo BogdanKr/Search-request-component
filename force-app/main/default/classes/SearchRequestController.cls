@@ -39,6 +39,7 @@ public with sharing class SearchRequestController {
 
     public void clearTable(){
         requestsToHandle.clear();
+        addRows();
     }
 
     public Integer getNumericValue(String str) {

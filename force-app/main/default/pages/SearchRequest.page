@@ -51,7 +51,9 @@
         <apex:actionFunction action="{!handleEnter}" name="searchFunction"/>
         <apex:commandButton action="{!submitRequests}" value="Submit"
                             reRender="pageMessages,requestItemTable" styleClass="bottomPlace"
-                            disabled="{!IF(requestsToHandle.size>1,false,true)}"/>
+                            disabled="{!IF(requestsToHandle.size>1,false,true)}">
+            <apex:variable var="rowcount" value="{!1}"/>
+        </apex:commandButton>
 
     </apex:form>
 
@@ -61,24 +63,8 @@
             if (e.keyCode === 13) {
                 console.log('enter pressed');
                 e.preventDefault();
-                // if (e.preventDefault) {
-                //     e.preventDefault();
-                // } else {
-                //     e.returnValue = false;
-                // }
                 searchFunction();
-                // validate();
             }
         }
-        // function validate(){
-        //     console.log('input value - ' + document.getElementById('{!$Component.SearchRequest.formId.regionId.blockId.requestItemTable.nameColumnId.searchInp}'));
-        //     let inp = document.getElementById('{!$Component.searchInp}').value;
-        //     if(inp.length < 3){
-        //         alert('Please enter at least 3 characters to search.');
-        //         return false;
-        //     }
-        //     searchFunction();
-        //     return true;
-        // }
     </script>
 </apex:page>
