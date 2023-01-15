@@ -16,6 +16,10 @@
         <apex:actionRegion id="regionId">
 
             <apex:pageBlock title="Requests" id="blockId">
+                <apex:pageBlockButtons location="top">
+                    <apex:commandButton action="{!clearTable}" value="Clear"
+                                        reRender="requestItemTable"/>
+                </apex:pageBlockButtons>
                 <apex:pageBlockTable value="{!requestsToHandle}" var="r" id="requestItemTable">
                     <apex:column>
                         {!rowcount}
@@ -41,8 +45,6 @@
                     </apex:column>
 
                 </apex:pageBlockTable>
-
-
             </apex:pageBlock>
         </apex:actionRegion>
 
@@ -50,6 +52,7 @@
         <apex:commandButton action="{!submitRequests}" value="Submit"
                             reRender="pageMessages,requestItemTable" styleClass="bottomPlace"
                             disabled="{!IF(requestsToHandle.size>1,false,true)}"/>
+
     </apex:form>
 
     <script>

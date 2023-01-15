@@ -26,6 +26,29 @@ public with sharing class SearchRequestController {
 
     public void submitRequests() {
         System.debug('Submit button clicked');
+        List<Search_request__c> searchRequests = new List<Search_request__c>();
+        for (SearchRequestWrapper sr : requestsToHandle) {
+            if (sr.searchRequest.Name != '') {
+                sr.searchRequest.Hash__c = sr.searchRequest.Name.hashCode();
+                sr.searchRequest.Numeric_value__c = getNumericValue(sr.searchRequest.Name);
+                searchRequests.add(sr.searchRequest);
+                System.debug('Search request==> ' + sr.searchRequest);
+            }
+        }
+    }
+
+    public void clearTable(){
+        requestsToHandle.clear();
+    }
+
+    public Integer getNumericValue(String str) {
+        List<Integer> chars = str.getChars();
+        Integer numericValue = 0;
+        for (Integer i : chars) {
+            System.debug('char: ' + i);
+            numericValue += i;
+        }
+        return numericValue;
     }
 
 
