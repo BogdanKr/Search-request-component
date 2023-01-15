@@ -2,7 +2,7 @@
  * Created by Bogdan_Krasun on 15.01.2023.
  */
 
-public with sharing class FindClosestFibonacciBatch implements Database.Batchable {
+public with sharing class FindClosestFibonacciBatch implements Database.Batchable<SObject> {
 
     public Database.QueryLocator start(Database.BatchableContext param1) {
         return Database.getQueryLocator([SELECT Name, Numeric_value__c FROM Search_request__c]);
@@ -18,12 +18,12 @@ public with sharing class FindClosestFibonacciBatch implements Database.Batchabl
                 second = third;
                 third = first + second;
             }
-
+            sr.Fibonacci_Below__c = second;
+            sr.Fibonacci_Above__c = third;
         }
-
+        update searchRequests;
     }
 
     public void finish(Database.BatchableContext param1) {
     }
-
 }

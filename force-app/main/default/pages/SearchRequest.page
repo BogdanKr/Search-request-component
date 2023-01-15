@@ -12,14 +12,17 @@
     <apex:variable var="rowcount" value="{!1}"/>
     <apex:sectionHeader title="Search Requests" subtitle="Add Request"/>
     <apex:pageMessages id="pageMessages"/>
-    <apex:form>
+    <apex:form id="pageBlockId">
+
         <apex:actionRegion>
-            <apex:pageBlock id="pageBlockId">
+            <apex:actionPoller action="{!rerenderFibonacciNearest}" rendered="{!waitPoll}" interval="5"
+                               reRender="requestItemTable" />
+            <apex:pageBlock >
                 <apex:pageBlockButtons location="top">
                     <apex:commandButton action="{!clearTable}" value="Clear"
                                         reRender="requestItemTable, pageBlockId"/>
-                    <apex:commandButton action="{!submitRequests}" value="Batch Fibonacci"
-                                        reRender="pageMessages,requestItemTable" styleClass="bottomPlace"
+                    <apex:commandButton action="{!processBatch}" value="Batch Fibonacci"
+                                        styleClass="bottomPlace"
                                         rendered="{!renderFibonacciButton}"/>
                 </apex:pageBlockButtons>
                 <apex:pageBlockTable value="{!requestsToHandle}" var="r" id="requestItemTable">
@@ -54,7 +57,7 @@
         <apex:actionFunction action="{!handleEnter}" name="searchFunction"/>
         <apex:commandButton action="{!submitRequests}" value="Submit"
                             reRender="pageMessages,requestItemTable,pageBlockId" styleClass="bottomPlace"
-                            disabled="{!IF(requestsToHandle.size>1,false,true)}">
+                            disabled="{!isDisabledButton}">
             <apex:variable var="rowcount" value="{!1}"/>
         </apex:commandButton>
 

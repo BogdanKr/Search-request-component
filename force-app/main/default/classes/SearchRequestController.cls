@@ -5,16 +5,20 @@
 public with sharing class SearchRequestController {
     private final static Integer MAX_ROWS = 10;
     private Integer rows = 0;
+    private Id jobId;
     public Boolean renderFibonacciButton { get; set; }
+    public Boolean isDisabledButton { get; set; }
+    public Boolean waitPoll { get; set; }
     public List<Search_request__c> requestsToHandle { get; set; }
 
     public SearchRequestController() {
+        isDisabledButton = true;
         requestsToHandle = new List<Search_request__c>();
         addRows();
     }
 
     public void handleEnter() {
-        System.debug('Key pressed Enter!!!');
+        isDisabledButton = false;
         addRows();
     }
 
@@ -26,8 +30,8 @@ public with sharing class SearchRequestController {
     }
 
     public void submitRequests() {
+        isDisabledButton = true;
         renderFibonacciButton = true;
-        System.debug('Submit button clicked');
         List<Search_request__c> searchRequests = new List<Search_request__c>();
         for (Search_request__c sr : requestsToHandle) {
             if (sr.Name != '') {
@@ -37,12 +41,39 @@ public with sharing class SearchRequestController {
                 System.debug('Search request==> ' + sr);
             }
         }
+        if (requestsToHandle.size() < 10) {
+            requestsToHandle.remove(requestsToHandle.size() - 1);
+        }
+        upsert requestsToHandle;
     }
 
-    public void clearTable(){
+    public void processBatch() {
+        jobId = Database.executeBatch(new FindClosestFibonacciBatch());
+        waitPoll = true;
+    }
+
+    public void rerenderFibonacciNearest() {
+        AsyncApexJob job = [SELECT Status FROM AsyncApexJob WHERE Id = :jobId];
+        System.debug('job status - ' + job.Status);
+        if (job.Status == 'Completed') {
+            requestsToHandle = [
+                    SELECT Name, Numeric_value__c, Hash__c, Fibonacci_Below__c, Fibonacci_Above__c
+                    FROM Search_request__c
+                    WHERE Id IN :requestsToHandle
+            ];
+            System.debug('After batch ==> ' + requestsToHandle);
+            waitPoll = false;
+        }
+//        return null;
+    }
+
+
+    public void clearTable() {
         requestsToHandle.clear();
         rows = 0;
         renderFibonacciButton = false;
+        isDisabledButton = true;
+//        delete [SELECT Id FROM Search_request__c];
         addRows();
     }
 
