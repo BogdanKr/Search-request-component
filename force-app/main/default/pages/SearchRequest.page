@@ -10,38 +10,41 @@
         }
     </style>
     <apex:variable var="rowcount" value="{!1}"/>
-    <apex:sectionHeader title="New Requests" subtitle="Add Request"/>
+    <apex:sectionHeader title="Search Requests" subtitle="Add Request"/>
     <apex:pageMessages id="pageMessages"/>
-    <apex:form id="formId">
-        <apex:actionRegion id="regionId">
-
-            <apex:pageBlock title="Requests" id="blockId">
+    <apex:form>
+        <apex:actionRegion>
+            <apex:pageBlock id="pageBlockId">
                 <apex:pageBlockButtons location="top">
                     <apex:commandButton action="{!clearTable}" value="Clear"
-                                        reRender="requestItemTable"/>
+                                        reRender="requestItemTable, pageBlockId"/>
+                    <apex:commandButton action="{!submitRequests}" value="Batch Fibonacci"
+                                        reRender="pageMessages,requestItemTable" styleClass="bottomPlace"
+                                        rendered="{!renderFibonacciButton}"/>
                 </apex:pageBlockButtons>
                 <apex:pageBlockTable value="{!requestsToHandle}" var="r" id="requestItemTable">
                     <apex:column>
                         {!rowcount}
                         <apex:variable var="rowcount" value="{!rowcount+1}"/>
                     </apex:column>
-                    <apex:column headerValue="{!$ObjectType.Search_request__c.fields.Name.Label}" id="nameColumnId">
-                        <apex:inputText id="searchInp" value="{!r.searchRequest.Name}" required="{!IF(requestsToHandle.size>1,false,true)}"
+                    <apex:column headerValue="{!$ObjectType.Search_request__c.fields.Name.Label}">
+                        <apex:inputText id="searchInp" value="{!r.Name}"
+                                        required="{!IF(requestsToHandle.size>1,false,true)}"
                                         onKeyPress="handleKeyPress(event)"
-                                        disabled="{!IF(r.searchRequest.Name=='',false,true)}"/>
+                                        disabled="{!IF(r.Name=='',false,true)}"/>
                     </apex:column>
                     <apex:column headerValue="{!$ObjectType.Search_request__c.fields.Hash__c.Label}">
-                        <apex:outputText value="{!r.searchRequest.Hash__c}"/>
+                        <apex:outputText value="{!r.Hash__c}"/>
                     </apex:column>
                     <apex:column headerValue="{!$ObjectType.Search_request__c.fields.Numeric_value__c.Label}">
-                        <apex:outputText value="{!r.searchRequest.Numeric_value__c}"/>
+                        <apex:outputText value="{!r.Numeric_value__c}"/>
                     </apex:column>
 
-                    <apex:column headerValue="Fibonacci below">
-                        <apex:outputText value="{!r.fibonacciBelow}"/>
+                    <apex:column headerValue="{!$ObjectType.Search_request__c.fields.Fibonacci_Below__c.Label}">
+                        <apex:outputText value="{!r.Fibonacci_Below__c}"/>
                     </apex:column>
-                    <apex:column headerValue="Fibonacci above">
-                        <apex:outputText value="{!r.fibonacciAbove}"/>
+                    <apex:column headerValue="{!$ObjectType.Search_request__c.fields.Fibonacci_Above__c.Label}">
+                        <apex:outputText value="{!r.Fibonacci_Above__c}"/>
                     </apex:column>
 
                 </apex:pageBlockTable>
@@ -50,7 +53,7 @@
 
         <apex:actionFunction action="{!handleEnter}" name="searchFunction"/>
         <apex:commandButton action="{!submitRequests}" value="Submit"
-                            reRender="pageMessages,requestItemTable" styleClass="bottomPlace"
+                            reRender="pageMessages,requestItemTable,pageBlockId" styleClass="bottomPlace"
                             disabled="{!IF(requestsToHandle.size>1,false,true)}">
             <apex:variable var="rowcount" value="{!1}"/>
         </apex:commandButton>

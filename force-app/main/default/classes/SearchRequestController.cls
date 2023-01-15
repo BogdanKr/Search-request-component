@@ -5,10 +5,11 @@
 public with sharing class SearchRequestController {
     private final static Integer MAX_ROWS = 10;
     private Integer rows = 0;
-    public List<SearchRequestWrapper> requestsToHandle { get; set; }
+    public Boolean renderFibonacciButton { get; set; }
+    public List<Search_request__c> requestsToHandle { get; set; }
 
     public SearchRequestController() {
-        requestsToHandle = new List<SearchRequestWrapper>();
+        requestsToHandle = new List<Search_request__c>();
         addRows();
     }
 
@@ -19,26 +20,29 @@ public with sharing class SearchRequestController {
 
     public void addRows() {
         if (rows < MAX_ROWS) {
-            requestsToHandle.add(new SearchRequestWrapper());
+            requestsToHandle.add(new Search_request__c());
             rows++;
         }
     }
 
     public void submitRequests() {
+        renderFibonacciButton = true;
         System.debug('Submit button clicked');
         List<Search_request__c> searchRequests = new List<Search_request__c>();
-        for (SearchRequestWrapper sr : requestsToHandle) {
-            if (sr.searchRequest.Name != '') {
-                sr.searchRequest.Hash__c = sr.searchRequest.Name.hashCode();
-                sr.searchRequest.Numeric_value__c = getNumericValue(sr.searchRequest.Name);
-                searchRequests.add(sr.searchRequest);
-                System.debug('Search request==> ' + sr.searchRequest);
+        for (Search_request__c sr : requestsToHandle) {
+            if (sr.Name != '') {
+                sr.Hash__c = sr.Name.hashCode();
+                sr.Numeric_value__c = getNumericValue(sr.Name);
+                searchRequests.add(sr);
+                System.debug('Search request==> ' + sr);
             }
         }
     }
 
     public void clearTable(){
         requestsToHandle.clear();
+        rows = 0;
+        renderFibonacciButton = false;
         addRows();
     }
 
@@ -50,16 +54,5 @@ public with sharing class SearchRequestController {
             numericValue += i;
         }
         return numericValue;
-    }
-
-
-    public class SearchRequestWrapper {
-        public Search_request__c searchRequest { get; set; }
-        public Integer fibonacciBelow { get; set; }
-        public Integer fibonacciAbove { get; set; }
-
-        public SearchRequestWrapper() {
-            searchRequest = new Search_request__c(Name = '');
-        }
     }
 }
