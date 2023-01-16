@@ -8,6 +8,7 @@ public without sharing class SearchRequestController {
     public Id jobId;
     public Boolean renderFibonacciButton { get; set; }
     public Boolean isDisabledButton { get; set; }
+    public Boolean isDisabledFibonacciButton { get; set; }
     public Boolean waitPoll { get; set; }
     public List<Search_request__c> requestsToHandle { get; set; }
 
@@ -51,6 +52,7 @@ public without sharing class SearchRequestController {
     public void processBatch() {
         jobId = Database.executeBatch(new FindClosestFibonacciBatch());
         waitPoll = true;
+        isDisabledFibonacciButton = true;
     }
 
     public void rerenderFibonacciNearest() {
@@ -74,6 +76,7 @@ public without sharing class SearchRequestController {
         rows = 0;
         renderFibonacciButton = false;
         isDisabledButton = true;
+        isDisabledFibonacciButton = false;
 //        delete [SELECT Id FROM Search_request__c];
         addRows();
     }

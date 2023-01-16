@@ -27,7 +27,7 @@
                                         reRender="requestItemTable, pageBlockId"/>
                     <apex:commandButton action="{!processBatch}" value="Batch Fibonacci"
                                         styleClass="bottomPlace"
-                                        rendered="{!renderFibonacciButton}"/>
+                                        rendered="{!renderFibonacciButton}" disabled="{!isDisabledFibonacciButton}"/>
                 </apex:pageBlockButtons>
                 <apex:pageBlockTable value="{!requestsToHandle}" var="r" id="requestItemTable">
                     <apex:column>
