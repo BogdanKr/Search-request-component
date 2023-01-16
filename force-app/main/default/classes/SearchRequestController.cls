@@ -4,14 +4,15 @@
 
 public with sharing class SearchRequestController {
     private final static Integer MAX_ROWS = 10;
-    private Integer rows = 0;
-    private Id jobId;
+    public Integer rows = 0;
+    public Id jobId;
     public Boolean renderFibonacciButton { get; set; }
     public Boolean isDisabledButton { get; set; }
     public Boolean waitPoll { get; set; }
     public List<Search_request__c> requestsToHandle { get; set; }
 
     public SearchRequestController() {
+        waitPoll = false;
         isDisabledButton = true;
         requestsToHandle = new List<Search_request__c>();
         addRows();
@@ -24,7 +25,7 @@ public with sharing class SearchRequestController {
 
     public void addRows() {
         if (rows < MAX_ROWS) {
-            requestsToHandle.add(new Search_request__c());
+            requestsToHandle.add(new Search_request__c(Name = ''));
             rows++;
         }
     }
@@ -44,7 +45,7 @@ public with sharing class SearchRequestController {
         if (requestsToHandle.size() < 10) {
             requestsToHandle.remove(requestsToHandle.size() - 1);
         }
-        upsert requestsToHandle;
+        insert requestsToHandle;
     }
 
     public void processBatch() {
