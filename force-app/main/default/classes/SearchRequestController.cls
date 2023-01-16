@@ -2,7 +2,7 @@
  * Created by Bogdan_Krasun on 14.01.2023.
  */
 
-public with sharing class SearchRequestController {
+public without sharing class SearchRequestController {
     private final static Integer MAX_ROWS = 10;
     public Integer rows = 0;
     public Id jobId;

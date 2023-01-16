@@ -2,12 +2,16 @@
  - Created by Bogdan_Krasun on 14.01.2023.
  -->
 
-<apex:page id="SearchRequest" controller="SearchRequestController">
+<apex:page showHeader="false" id="SearchRequest" controller="SearchRequestController" tabStyle="Search_request__c">
     <style>
         .bottomPlace {
             position: absolute;
             bottom: 0;
         }
+        /*body {*/
+        /*    background-color: white;*/
+        /*    max-height: 100% !important;*/
+        /*}*/
     </style>
     <apex:variable var="rowcount" value="{!1}"/>
     <apex:sectionHeader title="Search Requests" subtitle="Add Request"/>
